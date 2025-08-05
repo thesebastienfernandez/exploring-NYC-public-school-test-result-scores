@@ -23,3 +23,14 @@ df_schools["total_SAT"] = df_schools["average_math"] + df_schools["average_readi
 new_df_schools = df_schools[["school_name", "total_SAT"]]
 top_10_schools = new_df_schools.sort_values("total_SAT", ascending=False)[0:10]
 print(top_10_schools)
+
+# group by borough
+group_std_dev = df_schools.groupby("borough")["total_SAT"]
+# aggregate num_schools, average_SAT and std_SAT
+agg_std_dev = group_std_dev.agg(num_schools="count", average_SAT="mean", std_SAT="std").reset_index()
+# round values to two decimal places 
+rounded_std_dev = agg_std_dev.round(2)
+
+# create dataframe with only one row with the largest standard deviation
+largest_std_dev = pd.DataFrame([rounded_std_dev.loc[rounded_std_dev["std_SAT"].idxmax()]])
+print(largest_std_dev)
